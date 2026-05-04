@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المنتج - ApexFlow</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .product-detail-container { max-width: 1200px; margin: 40px auto; background: white; border-radius: 32px; padding: 30px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #3b82f6; text-decoration: none; }
+        .product-detail { display: flex; flex-wrap: wrap; gap: 40px; }
+        .gallery { flex: 1; }
+        .main-image { width: 100%; border-radius: 24px; }
+        .thumbnails { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        .thumb { width: 80px; height: 80px; object-fit: cover; border-radius: 16px; cursor: pointer; border: 2px solid transparent; }
+        .thumb.active { border-color: #3b82f6; }
+        .info { flex: 1; }
+        .price { font-size: 2rem; color: #3b82f6; font-weight: 800; margin: 15px 0; }
+        .order-form { background: #f8fafc; border-radius: 24px; padding: 25px; margin-top: 30px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border-radius: 50px; border: 1px solid #e2e8f0; }
+        .toast { position: fixed; bottom: 20px; left: 20px; background: #10b981; color: white; padding: 12px 24px; border-radius: 50px; transform: translateY(100px); transition: 0.3s; z-index: 1100; }
+        .toast.show { transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للمتجر</a>
+        <div id="productDetail" class="product-detail-container"></div>
+    </div>
+    <div id="toast" class="toast">✅ تم إرسال طلبك</div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        if(!productId) {
+            document.getElementById('productDetail').innerHTML = '<p>منتج غير موجود</p>';
+        } else {
+            const products = JSON.parse(localStorage.getItem('apexflow_products') || '[]');
+            const product = products.find(p => p.id == productId);
+            if(!product) {
+                document.getElementById('productDetail').innerHTML = '<p>المنتج غير موجود</p>';
+            } else {
+                renderProduct(product);
+            }
+        }
+
+        function renderProduct(product) {
+            const container = document.getElementById('productDetail');
+            let thumbHtml = '';
+            product.images.forEach((src, idx) => {
+                thumbHtml += `<img src="${src}" class="thumb ${idx===0 ? 'active' : ''}" data-src="${src}">`;
+            });
+            const html = `
+                <div class="product-detail">
+                    <div class="gallery">
+                        <img id="mainImage" class="main-image" src="${product.images[0]}" alt="${product.title}">
+                        <div class="thumbnails">${thumbHtml}</div>
+                    </div>
+                    <div class="info">
+                        <h1>${product.title}</h1>
+                        <p>${product.description}</p>
+                        <div class="price">${product.price} درهم</div>
+                        <button id="orderBtn" class="btn-primary">اطلب الآن</button>
+                    </div>
+                </div>
+                <div id="orderModal" class="order-form" style="display:none;">
+                    <h3>أكمل طلبك</h3>
+                    <form id="orderForm">
+                        <div class="form-group"><label>الاسم الكامل</label><input type="text" id="fullName" required></div>
+                        <div class="form-group"><label>العنوان</label><input type="text" id="address" required></div>
+                        <div class="form-group"><label>رقم الهاتف</label><input type="tel" id="phone" required></div>
+                        <div class="form-group"><label>ملاحظة (مقاس/لون)</label><textarea id="notes" rows="2"></textarea></div>
+                        <button type="submit" class="btn-primary">تأكيد الطلب</button>
+                        <button type="button" id="cancelBtn" style="background:#e2e8f0; margin-top:10px;">إلغاء</button>
+                    </form>
+                </div>
+            `;
+            container.innerHTML = html;
+            // معرض الصور
+            const mainImg = document.getElementById('mainImage');
+            document.querySelectorAll('.thumb').forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    mainImg.src = this.getAttribute('data-src');
+                    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            const modal = document.getElementById('orderModal');
+            const orderBtn = document.getElementById('orderBtn');
+            orderBtn.onclick = () => modal.style.display = 'block';
+            document.getElementById('cancelBtn')?.addEventListener('click', () => modal.style.display = 'none');
+            // إرسال الطلب
+            document.getElementById('orderForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const fullName = document.getElementById('fullName').value.trim();
+                const address = document.getElementById('address').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const notes = document.getElementById('notes').value.trim();
+                if(!fullName || !address || !phone) { alert('املأ جميع الحقول'); return; }
+                const order = {
+                    id: Date.now()+'-'+Math.random().toString(36).substr(2,6),
+                    status: 'pending',
+                    productId: product.id,
+                    productTitle: product.title,
+                    productPrice: product.price,
+                    productImage: product.images[0],
+                    fullName, address, phone, notes,
+                    timestamp: new Date().toLocaleString('ar-MA')
+                };
+                let orders = JSON.parse(localStorage.getItem('apexflow_orders_v2') || '[]');
+                orders.unshift(order);
+                localStorage.setItem('apexflow_orders_v2', JSON.stringify(orders));
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+                modal.style.display = 'none';
+                document.getElementById('orderForm').reset();
+            });
+        }
+    </script>
+</body>
+</html>
