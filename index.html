@@ -2,316 +2,181 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ApexFlow – متجر الأزياء العصري</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexFlow – متجر الأزياء</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* تنسيقات إضافية للصفحة الرئيسية فقط */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f1f5f9; font-family: 'Tajawal', sans-serif; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        .main-header {
+            background: white; padding: 15px 0; box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .main-header .container {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+        }
+        .logo {
+            font-size: 1.8rem; font-weight: 800;
+            background: linear-gradient(135deg, #1e293b, #3b82f6);
+            background-clip: text; -webkit-background-clip: text; color: transparent;
+        }
+        .search-bar {
+            flex: 1; max-width: 500px; display: flex; background: #f1f5f9;
+            border-radius: 60px; padding: 8px 18px; gap: 10px;
+        }
+        .search-bar input {
+            flex: 1; border: none; background: transparent; outline: none;
+        }
+        .user-area {
+            display: flex; gap: 15px; align-items: center;
+        }
+        .user-email {
+            font-weight: 600; color: #1e293b;
+        }
+        .logout-btn {
+            background: #ef4444; color: white; border: none; padding: 6px 16px;
+            border-radius: 50px; cursor: pointer;
+        }
         .hero-section {
             background: linear-gradient(120deg, #0f172a, #1e293b);
-            border-radius: 32px;
-            padding: 40px;
-            margin-bottom: 40px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .hero-text h1 { font-size: 2rem; margin-bottom: 12px; }
-        .hero-text p { color: #cbd5e1; max-width: 500px; }
-        .hero-badge {
-            background: rgba(255,255,255,0.15);
-            padding: 8px 20px;
-            border-radius: 60px;
-            backdrop-filter: blur(4px);
+            border-radius: 32px; padding: 40px; margin: 30px 0; color: white;
+            display: flex; justify-content: space-between; flex-wrap: wrap;
         }
         .category-sidebar {
-            background: white;
-            border-radius: 28px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        }
-        .category-sidebar h3 {
-            margin-bottom: 15px;
-            font-weight: 800;
+            background: white; border-radius: 28px; padding: 20px; margin-bottom: 30px;
         }
         .category-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
+            display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;
         }
         .category-tag {
-            background: #f1f5f9;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.2s;
+            background: #f1f5f9; padding: 8px 20px; border-radius: 40px; cursor: pointer;
         }
-        .category-tag.active, .category-tag:hover {
-            background: #3b82f6;
-            color: white;
-        }
-        .products-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .products-header h2 {
-            font-size: 1.6rem;
-            font-weight: 800;
-        }
-        .sort-select {
-            padding: 8px 16px;
-            border-radius: 40px;
-            border: 1px solid #e2e8f0;
-            background: white;
-        }
+        .category-tag.active { background: #3b82f6; color: white; }
         .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 28px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 28px; margin-top: 20px;
         }
         .product-card {
-            background: white;
-            border-radius: 24px;
-            overflow: hidden;
-            transition: 0.25s;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            cursor: pointer;
+            background: white; border-radius: 24px; overflow: hidden; cursor: pointer;
+            transition: 0.2s; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
-        }
-        .product-image {
-            position: relative;
-            padding-top: 100%;
-            overflow: hidden;
-        }
-        .product-image img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s;
-        }
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
-        }
-        .product-info {
-            padding: 18px;
-        }
-        .product-title {
-            font-weight: 800;
-            font-size: 1rem;
-            margin-bottom: 6px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .product-price {
-            color: #3b82f6;
-            font-weight: 800;
-            font-size: 1.2rem;
-            margin: 8px 0;
-        }
-        .product-old-price {
-            text-decoration: line-through;
-            color: #94a3b8;
-            font-size: 0.8rem;
-            margin-right: 8px;
-        }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1); }
+        .product-image { position: relative; padding-top: 100%; overflow: hidden; }
+        .product-image img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .product-info { padding: 18px; }
+        .product-title { font-weight: 800; }
+        .product-price { color: #3b82f6; font-weight: bold; margin: 8px 0; }
         .btn-order {
-            background: #f1f5f9;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: 0.2s;
-            cursor: pointer;
+            background: #f1f5f9; border: none; padding: 10px; width: 100%;
+            border-radius: 50px; font-weight: 600; cursor: pointer;
         }
-        .btn-order:hover {
-            background: #3b82f6;
-            color: white;
-        }
-        @media (max-width: 768px) {
-            .hero-section { text-align: center; }
-            .products-grid { gap: 16px; }
+        footer {
+            text-align: center; padding: 30px; margin-top: 40px;
+            border-top: 1px solid #e2e8f0; color: #475569;
         }
     </style>
 </head>
 <body>
-    <header class="main-header">
+
+<div id="appContainer">
+    <!-- شريط المستخدم (يظهر فقط عند تسجيل الدخول) -->
+    <div class="main-header" id="userHeader" style="display: none;">
         <div class="container">
-            <div class="logo">
-                <i class="fas fa-arrow-up"></i> ApexFlow
+            <div class="logo"><i class="fas fa-arrow-up"></i> ApexFlow</div>
+            <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="ابحث..."></div>
+            <div class="user-area">
+                <span class="user-email" id="userEmailDisplay"></span>
+                <button id="logoutBtn" class="logout-btn">تسجيل الخروج</button>
             </div>
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
-            </div>
-            <div class="header-icons">
-                <i class="fas fa-heart"></i>
-                <i class="fas fa-shopping-cart"></i>
-                <i class="fas fa-user"></i>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="hero-section">
-            <div class="hero-text">
-                <h1>تشكيلات الصيف</h1>
-                <p>خصومات تصل إلى 50% على أحدث الموديلات. جودة عالية وتوصيل سريع.</p>
-            </div>
-            <div class="hero-badge">
-                <i class="fas fa-truck"></i> توصيل مجاني للطلبات فوق 300 درهم
-            </div>
-        </div>
-
-        <div class="category-sidebar">
-            <h3><i class="fas fa-tags"></i> التصنيفات</h3>
-            <div class="category-list" id="categoryList">
-                <!-- سيتم تعبئتها بواسطة JS -->
-            </div>
-        </div>
-
-        <div class="products-header">
-            <h2>جميع المنتجات</h2>
-            <select id="sortSelect" class="sort-select">
-                <option value="default">الافتراضي</option>
-                <option value="price_asc">السعر: من الأقل إلى الأعلى</option>
-                <option value="price_desc">السعر: من الأعلى إلى الأقل</option>
-            </select>
-        </div>
-
-        <div class="products-grid" id="productsGrid">
-            <!-- سيتم تعبئتها -->
         </div>
     </div>
 
-    <footer class="main-footer">
+    <!-- محتوى المتجر -->
+    <div id="storeContent" style="display: none;">
         <div class="container">
-            <p>© 2026 ApexFlow – جميع الحقوق محفوظة</p>
-            <p>توصيل سريع | دفع عند الاستلام | جودة مضمونة</p>
+            <div class="hero-section">
+                <div><h1>تشكيلات الصيف</h1><p>خصومات تصل إلى 50%</p></div>
+                <div><i class="fas fa-truck"></i> توصيل سريع</div>
+            </div>
+            <div class="category-sidebar">
+                <h3>التصنيفات</h3>
+                <div id="categoryList" class="category-list"></div>
+            </div>
+            <div class="products-header"><h2>جميع المنتجات</h2></div>
+            <div id="productsGrid" class="products-grid"></div>
         </div>
-    </footer>
+        <footer><div class="container">© 2026 ApexFlow – جميع الحقوق محفوظة</div></footer>
+    </div>
+</div>
 
-    <script>
-        // تحميل البيانات من localStorage
-        let products = [];
-        let categories = [];
+<script>
+    // التحقق من تسجيل الدخول
+    const currentUser = localStorage.getItem('apexflow_current_user');
+    if (!currentUser) {
+        // إذا لم يكن هناك مستخدم مسجل، ننتقل إلى صفحة التسجيل
+        window.location.href = 'signup.html';
+    } else {
+        // إظهار المحتوى
+        document.getElementById('userHeader').style.display = 'block';
+        document.getElementById('storeContent').style.display = 'block';
+        const userObj = JSON.parse(currentUser);
+        document.getElementById('userEmailDisplay').innerText = userObj.email;
+    }
 
-        function loadData() {
-            categories = JSON.parse(localStorage.getItem('apexflow_categories') || '["تيشيرتات", "هوديز", "اكسسوارات"]');
-            products = JSON.parse(localStorage.getItem('apexflow_products') || '[]');
-            renderCategories();
-            filterAndRenderProducts();
-        }
+    // زر تسجيل الخروج
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        localStorage.removeItem('apexflow_current_user');
+        window.location.href = 'signup.html';
+    });
 
-        let currentCategory = 'الكل';
-        let searchQuery = '';
-        let sortBy = 'default';
+    // باقي كود عرض المنتجات والتصنيفات (نفس الكود السابق)
+    function loadStoreData() {
+        let products = JSON.parse(localStorage.getItem('apexflow_products') || '[]');
+        let categories = JSON.parse(localStorage.getItem('apexflow_categories') || '["تيشيرتات","هوديز","اكسسوارات"]');
+        renderCategories(categories, products);
+        renderProducts(products, categories);
+    }
 
-        function renderCategories() {
-            const container = document.getElementById('categoryList');
-            let html = `<div class="category-tag ${currentCategory === 'الكل' ? 'active' : ''}" data-cat="الكل">الكل</div>`;
-            categories.forEach(cat => {
-                html += `<div class="category-tag ${currentCategory === cat ? 'active' : ''}" data-cat="${cat}">${cat}</div>`;
+    function renderCategories(categories, products) {
+        const container = document.getElementById('categoryList');
+        if(!container) return;
+        let activeCategory = 'الكل';
+        let html = `<div class="category-tag active" data-cat="الكل">الكل</div>`;
+        categories.forEach(cat => { html += `<div class="category-tag" data-cat="${cat}">${cat}</div>`; });
+        container.innerHTML = html;
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+                activeCategory = tag.getAttribute('data-cat');
+                renderProducts(products, categories, activeCategory);
             });
-            container.innerHTML = html;
-            document.querySelectorAll('.category-tag').forEach(tag => {
-                tag.addEventListener('click', () => {
-                    currentCategory = tag.getAttribute('data-cat');
-                    renderCategories();
-                    filterAndRenderProducts();
-                });
-            });
-        }
+        });
+    }
 
-        function filterAndRenderProducts() {
-            let filtered = products;
-            if (currentCategory !== 'الكل') {
-                filtered = filtered.filter(p => p.category === currentCategory);
-            }
-            if (searchQuery.trim() !== '') {
-                const query = searchQuery.trim().toLowerCase();
-                filtered = filtered.filter(p => p.title.toLowerCase().includes(query));
-            }
-            // ترتيب
-            if (sortBy === 'price_asc') filtered.sort((a,b) => a.price - b.price);
-            else if (sortBy === 'price_desc') filtered.sort((a,b) => b.price - a.price);
-            else filtered.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-            const grid = document.getElementById('productsGrid');
-            if (filtered.length === 0) {
-                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;">لا توجد منتجات</div>';
-                return;
-            }
-            let html = '';
-            filtered.forEach(p => {
-                const firstImage = p.images && p.images[0] ? p.images[0] : 'https://placehold.co/400x400?text=ApexFlow';
-                html += `
-                    <div class="product-card" data-id="${p.id}">
-                        <div class="product-image">
-                            <img src="${firstImage}" alt="${p.title}" loading="lazy">
-                        </div>
+    function renderProducts(products, categories, categoryFilter = 'الكل') {
+        const container = document.getElementById('productsGrid');
+        let filtered = products;
+        if(categoryFilter !== 'الكل') filtered = products.filter(p => p.category === categoryFilter);
+        if(filtered.length === 0) { container.innerHTML = '<div style="grid-column:1/-1; text-align:center;">لا توجد منتجات</div>'; return; }
+        let html = '';
+        filtered.forEach(p => {
+            html += `<div class="product-card" onclick="window.location.href='product.html?id=${p.id}'">
+                        <div class="product-image"><img src="${p.images[0] || ''}" onerror="this.src='https://placehold.co/400x400'"></div>
                         <div class="product-info">
-                            <div class="product-title">${escapeHtml(p.title)}</div>
-                            <div class="product-price">
-                                ${p.price} درهم
-                                <span class="product-old-price">${Math.round(p.price * 1.3)} درهم</span>
-                            </div>
-                            <button class="btn-order" onclick="window.location.href='product.html?id=${p.id}'">اطلب الآن</button>
+                            <div class="product-title">${p.title}</div>
+                            <div class="product-price">${p.price} درهم</div>
+                            <button class="btn-order">اطلب الآن</button>
                         </div>
-                    </div>
-                `;
-            });
-            grid.innerHTML = html;
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-
-        // البحث والترتيب
-        const searchInput = document.getElementById('searchInput');
-        const sortSelect = document.getElementById('sortSelect');
-        searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value;
-            filterAndRenderProducts();
+                    </div>`;
         });
-        sortSelect.addEventListener('change', (e) => {
-            sortBy = e.target.value;
-            filterAndRenderProducts();
-        });
+        container.innerHTML = html;
+    }
 
-        loadData();
-        // الاستماع للتغيرات من admin (في حالة فتح نافذتين)
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'apexflow_products' || e.key === 'apexflow_categories') {
-                loadData();
-            }
-        });
-    </script>
+    loadStoreData();
+    window.addEventListener('storage', () => loadStoreData());
+</script>
 </body>
 </html>
